@@ -8,6 +8,7 @@ const person = (props) => {
       <p>{props.children}</p>
       <label htmlFor="changeName"></label>
       <input id="changeName" onChange={props.changeName} value={props.name }></input>
+      <button onClick={props.delete}> Delete Me! </button>
     </div>
   )
 }
