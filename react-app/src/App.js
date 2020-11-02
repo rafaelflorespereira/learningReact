@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import Person from './Person/Person'
+import Userinput from './Person/UserInput'
+import Useroutput from './Person/UserOutput'
 
 class App extends Component {
   state = {
@@ -8,6 +10,11 @@ class App extends Component {
       { name: 'Rafael', age: '28'},
       { name: 'John', age: '28'},
       { name: 'Leda', age: '29'}
+    ],
+    users: [
+      { id: 0, username: 'Rafael'},
+      { id: 1, username: 'Leda'},
+      { id: 2, username: 'Pitty'}
     ]
   }
 
@@ -23,6 +30,13 @@ class App extends Component {
       return state.persons[1].name = event.target.value
     })
   }
+
+  changeUsernameHandler = (event) => {
+    this.setState((state) => {
+      return state.users[0].username = event.target.value
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -41,6 +55,9 @@ class App extends Component {
           name={this.state.persons[2].name} 
           changeName={this.changeNameHandler}
           age={this.state.persons[2].age}></Person>
+        <h2>Exercise 1: Props and Handlers</h2>
+        <Userinput user={this.state.users[0]} changeUsername={this.changeUsernameHandler}></Userinput>
+        <Useroutput username={this.state.users[0].username}></Useroutput>
       </div>
     );
   }

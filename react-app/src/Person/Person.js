@@ -1,12 +1,13 @@
 import React from "react";
+import './Person.css';
 
 const person = (props) => {
   return (
-    <div>
+    <div className="Person">
       <p>I'm {props.name} with {props.age} years old</p>
       <p>{props.children}</p>
-      <label for="changeName"></label>
-      <input id="changeName" onChange={props.changeNameO} value={props.name }></input>
+      <label htmlFor="changeName"></label>
+      <input id="changeName" onChange={props.changeName} value={props.name }></input>
     </div>
   )
 }
