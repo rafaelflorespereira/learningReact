@@ -5,7 +5,8 @@ import Userinput from './Person/UserInput'
 import Useroutput from './Person/UserOutput'
 import ValidationComponent from './Exercise2Components/ValidationComponent'
 import CharComponent from './Exercise2Components/CharComponent'
-import Radium from 'radium'
+import styled from 'styled-components'
+import HouseDesign from './HouseDesign/HouseDesign'
 
 class App extends Component {
   state = {
@@ -19,6 +20,19 @@ class App extends Component {
       { id: 1, username: 'Leda'},
       { id: 2, username: 'Pitty'}
     ],
+    houseDesigns: [
+      {id: 0, style: 'transitional'},
+      {id: 1, style: 'modern'},
+      {id: 2, style: 'Rústico'},
+      {id: 3, style: 'Clássico Chic'},
+      {id: 4, style: 'Industrial'},
+      {id: 5, style: 'Nautical'},
+      {id: 6, style: 'Scandinavian'},
+    ],
+    designScore: [
+      'oi'
+    ],
+    turn: 0,
     showPersons: false,
     lengthSize: 0,
     characters: ''
@@ -74,16 +88,38 @@ class App extends Component {
     this.setState({characters: characters.join('')})
   }
 
+  getRandom(arr, n) {
+    var result = new Array(n),
+        len = arr.length,
+        taken = new Array(len);
+    if (n > len)
+        throw new RangeError("getRandom: more elements taken than available");
+    while (n--) {
+        var x = Math.floor(Math.random() * len);
+        result[n] = arr[x in taken ? taken[x] : x];
+        taken[x] = --len in taken ? taken[len] : len;
+    }
+    return result;
+  }
+
+  addDesignScore(item) {
+    const userScore = [...this.state.designScore]
+    userScore.push(item.style)
+    const turn = this.state.turn + 1
+    this.setState({designScore: userScore, turn})
+  }
+
   render() {
     let persons = null
-    const style = {
-      backgroundColor: 'green',
-      color: 'white',
-      ':hover': {
-        backgroundColor: 'lightgreen',
-        color: 'black'
+    const StyledButton = styled.button`
+      background-color: ${props => props.alt ? 'red' : 'green'};
+      color: white;
+      cursor: pointer;
+      &:hover: {
+        background-color: ${props => props.alt ? 'salmon' : 'greenlight'};
+        color: black;
       }
-    }
+    `
 
     if (this.state.showPersons) {
       persons = (
@@ -99,8 +135,8 @@ class App extends Component {
           })}
         </div>
       )
-    }
-
+     }
+    
     let characters = null 
 
     if(this.state.characters.length > 0) {
@@ -115,24 +151,33 @@ class App extends Component {
           })}
         </div>
       )
+    }
 
-      style.backgroundColor = 'red'
+    let houseDesigns = null
 
-      if(this.state.characters.length < 2) {
-        style.backgroundColor = 'red'
-      }
-
-      if(this.state.characters.length < 1) {
-        
-      }
+    if(this.state.houseDesigns.length > 0) {
+      houseDesigns = (
+        <div>
+          {this.getRandom(this.state.houseDesigns, 3).map((design,index) => {
+            return <HouseDesign 
+              category={design.style} 
+              key={index}
+              addScore={() => this.addDesignScore(design)}
+            />
+          })}
+        </div>
+      )
     }
 
     return (
       <div className="App">
         <h1>Hi, I am a react App</h1>
         <p>This is really working</p>
-        <button onClick={this.switchNameHandler.bind(this, 'input')}>Switch Name</button>
-        <button style={style} onClick={this.showPersonsHandler}>Show Persons</button>
+        <StyledButton 
+          alt={this.state.showPersons.toString()}
+          onClick={this.showPersonsHandler}
+          >Show Persons
+        </StyledButton>
         {persons}
         <h2>Exercise 1: Props and Handlers</h2>
         <Userinput user={this.state.users[0]} changeUsername={this.changeUsernameHandler}></Userinput>
@@ -149,9 +194,12 @@ class App extends Component {
           size={this.state.characters.length}
         />
         {characters}
+        <h2>The turn is: {this.state.turn}</h2>
+        <p>{this.state.designScore}</p>
+        {houseDesigns}
       </div>
     );
   }
 }
 
-export default Radium(App);
+export default App;
