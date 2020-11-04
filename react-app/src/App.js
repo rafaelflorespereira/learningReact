@@ -3,6 +3,9 @@ import './App.css';
 import Person from './Person/Person'
 import Userinput from './Person/UserInput'
 import Useroutput from './Person/UserOutput'
+import ValidationComponent from './Exercise2Components/ValidationComponent'
+import CharComponent from './Exercise2Components/CharComponent'
+import Radium from 'radium'
 
 class App extends Component {
   state = {
@@ -16,7 +19,9 @@ class App extends Component {
       { id: 1, username: 'Leda'},
       { id: 2, username: 'Pitty'}
     ],
-    showPersons: false
+    showPersons: false,
+    lengthSize: 0,
+    characters: ''
   }
 
   switchNameHandler = (newName) => {
@@ -53,8 +58,32 @@ class App extends Component {
     this.setState({persons})
   }
 
+  textLength = (event) => {
+    this.setState((state) => {
+      return state.lengthSize = event.target.value.length
+    })
+  }
+
+  setCharacters = (event) => {
+    this.setState(state => state.characters = event.target.value)
+  }
+
+  deleteCharacter = (index) => {
+    const characters = [...this.state.characters]
+    characters.splice(index, 1)
+    this.setState({characters: characters.join('')})
+  }
+
   render() {
     let persons = null
+    const style = {
+      backgroundColor: 'green',
+      color: 'white',
+      ':hover': {
+        backgroundColor: 'lightgreen',
+        color: 'black'
+      }
+    }
 
     if (this.state.showPersons) {
       persons = (
@@ -65,11 +94,37 @@ class App extends Component {
               name={person.name}
               age={person.age}
               key={person.id}
-              changeName={(event) => { this.changeNameHandler(event, person.id) }}
+              changeName={(event) => this.changeNameHandler(event, person.id)}
             />
           })}
         </div>
       )
+    }
+
+    let characters = null 
+
+    if(this.state.characters.length > 0) {
+      characters = (
+        <div>
+          {[...this.state.characters].map((char, index) => {
+            return <CharComponent
+              letter={char}
+              delete={(index) => this.deleteCharacter(index)}
+              key={index}
+            />
+          })}
+        </div>
+      )
+
+      style.backgroundColor = 'red'
+
+      if(this.state.characters.length < 2) {
+        style.backgroundColor = 'red'
+      }
+
+      if(this.state.characters.length < 1) {
+        
+      }
     }
 
     return (
@@ -77,14 +132,26 @@ class App extends Component {
         <h1>Hi, I am a react App</h1>
         <p>This is really working</p>
         <button onClick={this.switchNameHandler.bind(this, 'input')}>Switch Name</button>
-        <button onClick={this.showPersonsHandler}>Show Persons</button>
+        <button style={style} onClick={this.showPersonsHandler}>Show Persons</button>
         {persons}
         <h2>Exercise 1: Props and Handlers</h2>
         <Userinput user={this.state.users[0]} changeUsername={this.changeUsernameHandler}></Userinput>
         <Useroutput username={this.state.users[0].username}></Useroutput>
+        <h2>Exercise 2: Lists and Conditionals</h2>
+        <input 
+          type="text" 
+          onChange={(event) => this.setCharacters(event)}
+          value={this.state.characters}
+        ></input>
+        {this.state.characters}
+        <p>{this.state.characters.length}</p>
+        <ValidationComponent
+          size={this.state.characters.length}
+        />
+        {characters}
       </div>
     );
   }
 }
 
-export default App;
+export default Radium(App);
