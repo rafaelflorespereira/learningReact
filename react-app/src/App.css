@@ -22,6 +22,18 @@
   font-size: large;
 }
 
+.boxStyle {
+  width: 80%;
+  height: auto;
+  border: 1px solid black;
+  padding: 25px;
+  text-align: center;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

@@ -7,6 +7,7 @@ import ValidationComponent from './Exercise2Components/ValidationComponent'
 import CharComponent from './Exercise2Components/CharComponent'
 import styled from 'styled-components'
 import HouseDesign from './HouseDesign/HouseDesign'
+import styleData from './data/livingRoomStyles'
 
 class App extends Component {
   state = {
@@ -20,18 +21,8 @@ class App extends Component {
       { id: 1, username: 'Leda'},
       { id: 2, username: 'Pitty'}
     ],
-    houseDesigns: [
-      {id: 0, style: 'transitional'},
-      {id: 1, style: 'modern'},
-      {id: 2, style: 'Rústico'},
-      {id: 3, style: 'Clássico Chic'},
-      {id: 4, style: 'Industrial'},
-      {id: 5, style: 'Nautical'},
-      {id: 6, style: 'Scandinavian'},
-    ],
-    designScore: [
-      'oi'
-    ],
+    houseDesigns: styleData,
+    score: {style: '',score: 0},
     turn: 0,
     showPersons: false,
     lengthSize: 0,
@@ -88,6 +79,8 @@ class App extends Component {
     this.setState({characters: characters.join('')})
   }
 
+  //! STYLE QUIZ
+
   getRandom(arr, n) {
     var result = new Array(n),
         len = arr.length,
@@ -103,12 +96,27 @@ class App extends Component {
   }
 
   addDesignScore(item) {
-    const userScore = [...this.state.designScore]
-    userScore.push(item.style)
+    const userScore = this.state.houseDesigns 
+    userScore.map(houseStyle => {
+      if(houseStyle.style === item.style)
+      return houseStyle.score++
+    })
     const turn = this.state.turn + 1
-    this.setState({designScore: userScore, turn})
+    this.getDesignScore()
+    this.setState({houseDesigns: userScore, turn})
   }
 
+  getDesignScore() {
+    let best = this.state.score
+    this.state.houseDesigns.map(p => {
+      if(p.score > best.score) {
+        best = p
+    }})
+    console.log(best)
+    this.setState({score: best})
+  }
+
+  //!RENDER
   render() {
     let persons = null
     const StyledButton = styled.button`
@@ -135,7 +143,7 @@ class App extends Component {
           })}
         </div>
       )
-     }
+    }
     
     let characters = null 
 
@@ -152,22 +160,40 @@ class App extends Component {
         </div>
       )
     }
-
+    //!style quiz
     let houseDesigns = null
-
-    if(this.state.houseDesigns.length > 0) {
+    
+    if(this.state.turn < 10) {
       houseDesigns = (
         <div>
-          {this.getRandom(this.state.houseDesigns, 3).map((design,index) => {
-            return <HouseDesign 
-              category={design.style} 
-              key={index}
-              addScore={() => this.addDesignScore(design)}
+          <h3>Escolha o seu estilo preferido</h3>
+          <div className="boxStyle">
+            {
+              this.getRandom(this.state.houseDesigns, 3).map((design,index) => {
+                return <HouseDesign 
+                category={design.style}
+                image={design.url}
+                key={index}
+                addScore={() => this.addDesignScore(design)}
+                />
+              })}
+          </div>
+        </div>
+      )
+    } else {
+      houseDesigns = (
+        <div>
+          <h3>Seu estilo Favorito é: </h3>
+          <div className="boxStyle">
+            <HouseDesign 
+              category={this.state.score.style}
+              image={this.state.score.url}
             />
-          })}
+          </div>
         </div>
       )
     }
+    //!style quiz
 
     return (
       <div className="App">
@@ -195,7 +221,8 @@ class App extends Component {
         />
         {characters}
         <h2>The turn is: {this.state.turn}</h2>
-        <p>{this.state.designScore}</p>
+        <p>{this.state.score.score}</p>
+        <p>{this.state.score.style}</p>
         {houseDesigns}
       </div>
     );
