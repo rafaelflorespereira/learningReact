@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
-import './App.css';
-import Person from './Person/Person'
-import Userinput from './Person/UserInput'
+import React, { Component } from 'react'
+import classes from './App.css'
+import Person from './Person/Person' 
+import Userinput from './Person/UserInput' 
 import Useroutput from './Person/UserOutput'
 import ValidationComponent from './Exercise2Components/ValidationComponent'
 import CharComponent from './Exercise2Components/CharComponent'
-import styled from 'styled-components'
 import HouseDesign from './HouseDesign/HouseDesign'
-import styleData from './data/livingRoomStyles'
+import styleData from './data/livingRoomStyles' 
 
-class App extends Component {
-  state = {
-    persons: [
+class App extends Component { 
+  state = { 
+    persons: [ 
       { id: 'asdfkler', name: 'Rafael', age: '28'},
       { id: 'asdewasdasc', name: 'Pipi', age: '28'},
       { id: 'sdawqweqw', name: 'Leda', age: '29'}
@@ -110,7 +109,7 @@ class App extends Component {
     let best = this.state.score
     this.state.houseDesigns.map(p => {
       if(p.score > best.score) {
-        best = p
+        return best = p
     }})
     console.log(best)
     this.setState({score: best})
@@ -119,15 +118,7 @@ class App extends Component {
   //!RENDER
   render() {
     let persons = null
-    const StyledButton = styled.button`
-      background-color: ${props => props.alt ? 'red' : 'green'};
-      color: white;
-      cursor: pointer;
-      &:hover: {
-        background-color: ${props => props.alt ? 'salmon' : 'greenlight'};
-        color: black;
-      }
-    `
+    let buttonClass = [classes.Button]
 
     if (this.state.showPersons) {
       persons = (
@@ -143,6 +134,7 @@ class App extends Component {
           })}
         </div>
       )
+      buttonClass.push(classes.Red)
     }
     
     let characters = null 
@@ -167,7 +159,7 @@ class App extends Component {
       houseDesigns = (
         <div>
           <h3>Escolha o seu estilo preferido</h3>
-          <div className="boxStyle">
+          <div className={classes.BoxStyle}>
             {
               this.getRandom(this.state.houseDesigns, 3).map((design,index) => {
                 return <HouseDesign 
@@ -184,7 +176,7 @@ class App extends Component {
       houseDesigns = (
         <div>
           <h3>Seu estilo Favorito é: </h3>
-          <div className="boxStyle">
+          <div className={classes.boxStyle}>
             <HouseDesign 
               category={this.state.score.style}
               image={this.state.score.url}
@@ -196,14 +188,15 @@ class App extends Component {
     //!style quiz
 
     return (
-      <div className="App">
+      <div className={classes.App}>
         <h1>Hi, I am a react App</h1>
         <p>This is really working</p>
-        <StyledButton 
+        <button
           alt={this.state.showPersons.toString()}
+          className={buttonClass.join(" ")}
           onClick={this.showPersonsHandler}
           >Show Persons
-        </StyledButton>
+        </button>
         {persons}
         <h2>Exercise 1: Props and Handlers</h2>
         <Userinput user={this.state.users[0]} changeUsername={this.changeUsernameHandler}></Userinput>

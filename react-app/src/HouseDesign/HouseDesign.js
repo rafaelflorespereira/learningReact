@@ -10,7 +10,7 @@ const houseDesign = (props) => {
   return(
     <div style={styleBox} onClick={props.addScore}>
       <p>{props.category}</p>
-      <img src={props.image} width="250px" height="250px"></img>
+      <img alt={props.category}src={props.image} width="250px" height="250px"></img>
     </div>
   )
 }
