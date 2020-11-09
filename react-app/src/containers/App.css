@@ -22,24 +22,6 @@
   font-size: large;
 }
 
-.App .Button {
-  background-color: green;
-  color:white;
-  font: inherit;
-  border: 1px solid blue;
-  padding: 8px;
-  cursor: pointer;
-}
-.App .Button:hover {
-  background-color: lightgreen;
-}
-.App .Red {
-  background-color: red;
-}
-.App .Red:hover {
-  background-color: salmon;
-}
-
 .App .BoxStyle {
   width: 80%;
   height: auto;

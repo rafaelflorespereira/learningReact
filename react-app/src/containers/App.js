@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import classes from './App.css'
-import Person from './Person/Person' 
-import Userinput from './Person/UserInput' 
-import Useroutput from './Person/UserOutput'
-import ValidationComponent from './Exercise2Components/ValidationComponent'
-import CharComponent from './Exercise2Components/CharComponent'
-import HouseDesign from './HouseDesign/HouseDesign'
-import styleData from './data/livingRoomStyles' 
+import Persons from '../components/Persons/Persons' 
+import CharComponent from '../components/Exercise2Components/CharComponent'
+import HouseDesign from '../components/HouseDesign/HouseDesign'
+import styleData from '../assets/data/livingRoomStyles' 
+import Cockpit from '../components/Cockpit/Cockpit'
+import Ex1Cockpit from '../components/Exercise1/Exercise1Cockpit'
+import Ex2Cockpit from '../components/Exercise2Components/Exercise2Cockpit'
 
 class App extends Component { 
   state = { 
@@ -118,23 +118,15 @@ class App extends Component {
   //!RENDER
   render() {
     let persons = null
-    let buttonClass = [classes.Button]
 
     if (this.state.showPersons) {
       persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return <Person
-              delete={() => this.deletePerson(index)}
-              name={person.name}
-              age={person.age}
-              key={person.id}
-              changeName={(event) => this.changeNameHandler(event, person.id)}
-            />
-          })}
-        </div>
+        <Persons 
+          delete={this.deletePerson}
+          changeName={this.changeNameHandler}
+          persons={this.state.persons}
+        />
       )
-      buttonClass.push(classes.Red)
     }
     
     let characters = null 
@@ -165,7 +157,7 @@ class App extends Component {
                 return <HouseDesign 
                 category={design.style}
                 image={design.url}
-                key={index}
+                key={design.id}
                 addScore={() => this.addDesignScore(design)}
                 />
               })}
@@ -189,29 +181,17 @@ class App extends Component {
 
     return (
       <div className={classes.App}>
-        <h1>Hi, I am a react App</h1>
-        <p>This is really working</p>
-        <button
-          alt={this.state.showPersons.toString()}
-          className={buttonClass.join(" ")}
-          onClick={this.showPersonsHandler}
-          >Show Persons
-        </button>
+        <Cockpit 
+          showPersons={this.state.showPersons}
+          showHandler={this.showPersonsHandler}/>
         {persons}
-        <h2>Exercise 1: Props and Handlers</h2>
-        <Userinput user={this.state.users[0]} changeUsername={this.changeUsernameHandler}></Userinput>
-        <Useroutput username={this.state.users[0].username}></Useroutput>
-        <h2>Exercise 2: Lists and Conditionals</h2>
-        <input 
-          type="text" 
-          onChange={(event) => this.setCharacters(event)}
-          value={this.state.characters}
-        ></input>
-        {this.state.characters}
-        <p>{this.state.characters.length}</p>
-        <ValidationComponent
-          size={this.state.characters.length}
+        <Ex1Cockpit 
+          users={this.state.users}
+          nameHandler={this.changeNameHandler}
         />
+        <Ex2Cockpit 
+          setCharacters={this.setCharacters}
+          characters={this.state.characters}/>
         {characters}
         <h2>The turn is: {this.state.turn}</h2>
         <p>{this.state.score.score}</p>
